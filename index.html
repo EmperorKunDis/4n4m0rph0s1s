@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anamorphosis 3D Simulator</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+</head>
+<body>
+    <!-- Main 3D canvas container -->
+    <div id="canvas-container"></div>
+
+    <!-- Webcam video (hidden, used by face tracker) -->
+    <video id="webcam" autoplay playsinline></video>
+
+    <!-- Face tracking debug preview -->
+    <div id="webcam-preview">
+        <canvas id="webcam-canvas"></canvas>
+        <div id="tracking-status">Face tracking: initializing...</div>
+    </div>
+
+    <!-- Debug overlay -->
+    <div id="debug-overlay">
+        <div id="debug-info">
+            <h3>Debug Info</h3>
+            <div id="debug-fps">FPS: --</div>
+            <div id="debug-head-pos">Head: x=0, y=0, z=60</div>
+            <div id="debug-frustum">Frustum: symmetric</div>
+            <div id="debug-latency">Latency: -- ms</div>
+        </div>
+    </div>
+
+    <!-- Controls panel -->
+    <div id="controls-panel">
+        <div id="controls-toggle" title="Toggle Controls">&#9881;</div>
+        <div id="controls-content">
+            <h3>Anamorphosis Controls</h3>
+
+            <fieldset>
+                <legend>Scene</legend>
+                <label>
+                    Scene:
+                    <select id="scene-select">
+                        <option value="cubes">Floating Cubes</option>
+                        <option value="room">Room Interior</option>
+                        <option value="pillars">Greek Pillars</option>
+                        <option value="tunnel">Tunnel</option>
+                    </select>
+                </label>
+                <label>
+                    <input type="checkbox" id="show-grid" checked> Show grid
+                </label>
+                <label>
+                    <input type="checkbox" id="show-axes"> Show axes
+                </label>
+            </fieldset>
+
+            <fieldset>
+                <legend>Screen Calibration</legend>
+                <label>
+                    Screen width (cm):
+                    <input type="number" id="screen-width" value="52" min="10" max="200" step="1">
+                </label>
+                <label>
+                    Screen height (cm):
+                    <input type="number" id="screen-height" value="32" min="5" max="120" step="1">
+                </label>
+                <label>
+                    Webcam offset X (cm):
+                    <input type="number" id="cam-offset-x" value="0" min="-50" max="50" step="0.5">
+                </label>
+                <label>
+                    Webcam offset Y (cm):
+                    <input type="number" id="cam-offset-y" value="1.5" min="-20" max="20" step="0.5">
+                </label>
+            </fieldset>
+
+            <fieldset>
+                <legend>Tracking</legend>
+                <label>
+                    Smoothing:
+                    <input type="range" id="smoothing" min="0" max="0.95" step="0.05" value="0.6">
+                    <span id="smoothing-val">0.6</span>
+                </label>
+                <label>
+                    Sensitivity:
+                    <input type="range" id="sensitivity" min="0.5" max="3" step="0.1" value="1.0">
+                    <span id="sensitivity-val">1.0</span>
+                </label>
+                <label>
+                    <input type="checkbox" id="mouse-fallback" checked> Mouse fallback (no webcam)
+                </label>
+                <label>
+                    <input type="checkbox" id="show-webcam" checked> Show webcam preview
+                </label>
+            </fieldset>
+
+            <fieldset>
+                <legend>Projection</legend>
+                <label>
+                    Mode:
+                    <select id="projection-mode">
+                        <option value="offaxis">Off-Axis (Anamorphosis)</option>
+                        <option value="standard">Standard Perspective</option>
+                    </select>
+                </label>
+                <label>
+                    Near plane:
+                    <input type="number" id="near-plane" value="0.1" min="0.01" max="5" step="0.01">
+                </label>
+                <label>
+                    Far plane:
+                    <input type="number" id="far-plane" value="500" min="10" max="5000" step="10">
+                </label>
+            </fieldset>
+
+            <fieldset>
+                <legend>Debug</legend>
+                <label>
+                    <input type="checkbox" id="show-debug" checked> Show debug overlay
+                </label>
+                <label>
+                    <input type="checkbox" id="show-frustum-vis"> Visualize frustum
+                </label>
+            </fieldset>
+
+            <button id="btn-start-tracking">Start Face Tracking</button>
+            <button id="btn-reset">Reset Camera</button>
+        </div>
+    </div>
+
+    <!-- Loading screen -->
+    <div id="loading-screen">
+        <div id="loading-content">
+            <h1>Anamorphosis 3D</h1>
+            <p>Interactive perspective illusion simulator</p>
+            <div id="loading-bar-container">
+                <div id="loading-bar"></div>
+            </div>
+            <p id="loading-status">Loading Three.js...</p>
+        </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
